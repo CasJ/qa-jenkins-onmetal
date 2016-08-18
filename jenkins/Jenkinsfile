@@ -79,11 +79,11 @@ def wait_for_ping(ip) {
     echo "Waiting for the host with IP:${ip} to become online."
     def response
     def current_time
-    def timeout = 360
+    int timeout = 360
     def initial_time = sh returnStdout: true, script: 'date +%s'
     waitUntil {
         current_time = sh returnStdout: true, script: 'date +%s'
-        if (current_time - initial_time > timeout) {
+        if (current_time.toInteger() - initial_time.toInteger() > timeout) {
             error "The host did not respond to ping within the timeout of ${timeout} seconds"
         }
         response = sh returnStatus: true, script: "ping -q -c 1 ${ip}"
