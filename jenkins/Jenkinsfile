@@ -19,7 +19,7 @@ node('onmetal-provisioner') {
     sudo ansible-playbook -i hosts get_onmetal_facts.yaml --tags 'iad'
     '''
     // Get server IP address
-    String hosts = readFile(home+'hosts').trim()
+    String hosts = readFile("${home}hosts")
     onmetal_ip = hosts.substring(hosts.indexOf('=')+1)
     // Wait for server to become active
     wait_for_ping(onmetal_ip)
