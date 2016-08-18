@@ -64,6 +64,7 @@ node('onmetal-provisioner') {
 
 def wait_for_ping(ip) {
     
+    echo "Waiting for the host with IP:${ip} to become online."
     def response
     def timeout = 360
     def initial_time = System.currentTimeSeconds()
