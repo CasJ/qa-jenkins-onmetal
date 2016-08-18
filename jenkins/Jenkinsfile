@@ -71,7 +71,11 @@ stage 'Deployment'
 echo "Deploying OpenStack using OSA"
 node('onmetal-provisioner') {
 
-
+    // Deploy OpenStack
+    sh """
+    cd ${home}    
+    sudo ansible-playbook -i hosts deploy_osa.yaml
+    """
 
 }
 
