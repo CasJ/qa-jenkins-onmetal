@@ -2,7 +2,7 @@
 stage 'Pre-Deployment'
 // *******************************
 
-echo 'Provision an onMetal server and prepare it to run OSA'
+echo 'Provisioning an onMetal server and preparing it to run OSA'
 node('onmetal-provisioner') {
     
     String home = '/home/ubuntu/qa-jenkins-onmetal/'
@@ -62,14 +62,28 @@ node('onmetal-provisioner') {
 }
 
 
+// *******************************
+stage 'Deployment'
+// *******************************
+
+echo "Deploying OpenStack using OSA"
+node('onmetal-provisioner') {
+
+
+
+}
+
+
 def wait_for_ping(ip) {
     
     echo "Waiting for the host with IP:${ip} to become online."
     def response
+    def current_time
     def timeout = 360
-    def initial_time = System.currentTimeSeconds()
+    def initial_time = sh returnStdout: true, script: 'date +%s'
     waitUntil {
-        if (System.currentTimeSeconds() - initial_time > timeout) {
+        current_time = sh returnStdout: true, script: 'date +%s'
+        if (current_time - initial_time > timeout) {
             error "The host did not respond to ping within the timeout of ${timeout} seconds"
         }
         response = sh returnStatus: true, script: "ping -q -c 1 ${ip}"
