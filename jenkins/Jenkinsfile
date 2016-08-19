@@ -8,6 +8,12 @@ node('onmetal-provisioner') {
     String home = '/home/ubuntu/qa-jenkins-onmetal/'
     String onmetal_ip
 
+    // Get the repo
+    sh """
+    rm -rf ${home}
+    git clone https://github.com/osic/qa-jenkins-onmetal.git ${home}
+    """
+
     // Spin onMetal Server
     sh '''
     cd /home/ubuntu/qa-jenkins-onmetal/
