@@ -12,6 +12,7 @@ node('onmetal-provisioner') {
     sh """
     rm -rf ${home}
     git clone https://github.com/osic/qa-jenkins-onmetal.git ${home}
+    cp /home/ubuntu/.raxpub ${home}.raxpub
     """
 
     // Spin onMetal Server
