@@ -10,15 +10,17 @@ String onmetal_ip
 echo 'Provisioning an onMetal server and preparing it to run OSA'
 node('onmetal-provisioner') {
 
-    // Load the external functions
-    ext_fcn = load 'onmetal.functions.groovy'
-
     // Get the repo
     sh """
     rm -rf ${home}
     git clone https://github.com/osic/qa-jenkins-onmetal.git ${home}
     cp /home/ubuntu/.raxpub ${home}.raxpub
+    cd ${home}jenkins
+    wget https://raw.githubusercontent.com/CasJ/qa-jenkins-onmetal/master/jenkins/onmetal.functions.groovy
     """
+
+    // Load the external functions
+    ext_fcn = load "${home}jenkins/onmetal.functions.groovy"
     
     // Provision the onMetal host
     onmetal_ip = ext_fcn.onmetal_provision(home)
