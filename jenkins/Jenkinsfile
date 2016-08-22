@@ -86,7 +86,7 @@ node('onmetal-provisioner') {
 
     // Install Tempest on the onMetal host
     sh """
-    ssh root@${onmetal_ip} '''
+    ssh -o StrictHostKeyChecking=no root@${onmetal_ip} '''
     git clone https://github.com/openstack/tempest.git /root/tempest
     cd /root/tempest/
     sudo pip install -r requirements.txt
@@ -105,10 +105,11 @@ node('onmetal-provisioner') {
     // Configure tempest based on the OSA deployment
     sh """
     ssh root@${onmetal_ip} '''
-    keys="admin_password image_ref image_ref_alt uri uri_v3 public_network_id"
+    keys="admin_password image_ref image_ref_alt uri uri_v3 public_network_id reseller_admin_role"
     for key in \$keys
     do
         a="\${key} ="
+        sed -ir "s|\$a.*|\$a|g" /root/tempest/etc/tempest.conf
         b=`cat /root/tempest/etc/tempest.conf.osa | grep "\$a"`
         sed -ir "s|\$a|\$b|g" /root/tempest/etc/tempest.conf
     done
