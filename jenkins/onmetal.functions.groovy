@@ -23,6 +23,8 @@ def wait_for_ping(ip) {
 
 def onmetal_provision(home) {
 
+    def ip
+    
     // Spin onMetal Server
     sh """
     cd ${home}
@@ -37,7 +39,7 @@ def onmetal_provision(home) {
 
     // Get server IP address
     String hosts = readFile("${home}hosts")
-    def ip = hosts.substring(hosts.indexOf('=')+1)
+    ip = hosts.substring(hosts.indexOf('=')+1)
     
     // Wait for server to become active
     wait_for_ping(ip)
