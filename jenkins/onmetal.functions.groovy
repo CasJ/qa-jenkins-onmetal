@@ -4,9 +4,9 @@
 echo "Loading external functions..."
 
 
-def wait_for_ping(ip) {
+def wait_for_ping(host_ip) {
     
-    echo "Waiting for the host with IP:${ip} to become online."
+    echo "Waiting for the host with IP:${host_ip} to become online."
     def response
     def current_time
     int timeout = 360
@@ -16,13 +16,13 @@ def wait_for_ping(ip) {
         if (current_time.toInteger() - initial_time.toInteger() > timeout) {
             error "The host did not respond to ping within the timeout of ${timeout} seconds"
         }
-        response = sh returnStatus: true, script: "ping -q -c 1 ${ip}"
+        response = sh returnStatus: true, script: "ping -q -c 1 ${host_ip}"
         return (response == 0) 
     }
     
 }
 
-
+/*
 def onmetal_provision(playbooks_path) {
    
     // Spin onMetal Server
@@ -60,7 +60,6 @@ def onmetal_provision(playbooks_path) {
 
     // Wait for the server to come back online
     wait_for_ping(ip)
-
 
     // Add the onMetal host to the known_hosts
     sh """
@@ -162,9 +161,8 @@ run_tempest_smoke_tests(ip) {
     """
 
 }
+*/
 
-
-// !!Important Boilerplate!!
 // The external code must return it's contents as an object
 return this;
 
