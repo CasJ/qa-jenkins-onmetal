@@ -13,7 +13,7 @@ echo 'Provisioning an onMetal server and preparing it to run OSA'
 node('onmetal-provisioner') {
 
     // Load the external functions
-    def ext_fcn = fileLoader.fromGit('jenkins/onmetal.functions.groovy', 
+    ext_fcn = fileLoader.fromGit('jenkins/onmetal.functions.groovy', 
         'https://github.com/CasJ/qa-jenkins-onmetal.git', 'master', null, '')
 
     // Download the project repository
