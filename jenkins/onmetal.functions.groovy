@@ -1,5 +1,7 @@
+#!/usr/bin/env groovy
+
 // Any command placed at the root of the file get executed during the load operation
-echo "Loading onMetal functions..."
+echo "Loading external functions..."
 
 
 def wait_for_ping(ip) {
@@ -21,25 +23,23 @@ def wait_for_ping(ip) {
 }
 
 
-def onmetal_provision(home) {
-
-    def ip
-    
+def onmetal_provision(playbooks_path) {
+   
     // Spin onMetal Server
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook build_onmetal.yaml --tags 'iad'
     """
     
     // Verify onMetal server data
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook -i hosts get_onmetal_facts.yaml --tags 'iad'
     """
 
     // Get server IP address
-    String hosts = readFile("${home}hosts")
-    ip = hosts.substring(hosts.indexOf('=')+1)
+    String hosts = readFile("${playbooks_path}hosts")
+    def ip = hosts.substring(hosts.indexOf('=')+1)
     
     // Wait for server to become active
     wait_for_ping(ip)
@@ -47,14 +47,14 @@ def onmetal_provision(home) {
     // Prepare OnMetal server, retry up to 5 times for the command to work
     retry(5) {
         sh """
-        cd ${home}
+        cd ${playbooks_path}
         sudo ansible-playbook -i hosts prepare_onmetal.yaml
         """
     }
 
     // Apply CPU fix - will restart server (~5 min)
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook -i hosts set_onmetal_cpu.yaml
     """
 
@@ -72,38 +72,38 @@ def onmetal_provision(home) {
 } 
 
 
-def vm_provision(home) {
+def vm_provision(playbooks_path) {
 
     // Configure VMs onMetal server
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook -i hosts configure_onmetal.yaml
     """
 
     // Create VMs where OSA will be deployed
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook -i hosts create_lab.yaml
     """
 
 }
 
 
-def vm_preparation_for_osa(home) {
+def vm_preparation_for_osa(playbooks_path) {
 
     // Prepare each VM for OSA installation
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook -i hosts prepare_for_osa.yaml
     """
 
 }
 
 
-def deploy_openstack(home) {
+def deploy_openstack(playbooks_path) {
 
     sh """
-    cd ${home}
+    cd ${playbooks_path}
     sudo ansible-playbook -i hosts deploy_osa.yaml
     """
 

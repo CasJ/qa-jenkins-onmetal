@@ -1,35 +1,37 @@
-// *******************************
-stage 'Pre-Deployment'
-// *******************************
+#!/usr/bin/env groovy
 
 def ext_fcn 
 String home = '/home/ubuntu/qa-jenkins-onmetal/'
 String onmetal_ip
 
 
+// *******************************
+stage 'Pre-Deployment'
+// *******************************
+
 echo 'Provisioning an onMetal server and preparing it to run OSA'
 node('onmetal-provisioner') {
 
-    // Get the repo
+    // Load the external functions
+    def ext_fcn = fileLoader.fromGit('jenkins/onmetal.functions.groovy', 
+        'https://github.com/CasJ/qa-jenkins-onmetal.git', 'master', null, '')
+
+    // Download the project repository
     sh """
     rm -rf ${home}
     git clone https://github.com/osic/qa-jenkins-onmetal.git ${home}
     cp /home/ubuntu/.raxpub ${home}.raxpub
-    cd ${home}jenkins
-    wget https://raw.githubusercontent.com/CasJ/qa-jenkins-onmetal/master/jenkins/onmetal.functions.groovy
     """
-
-    // Load the external functions
-    ext_fcn = load "${home}jenkins/onmetal.functions.groovy"
     
+    ext_fcn.wait_for_ping('10.0.0.11')
     // Provision the onMetal host
-    onmetal_ip = ext_fcn.onmetal_provision(home)
+    //onmetal_ip = ext_fcn.onmetal_provision(home)
 
     // Provision the VMs in the onMetal host
-    ext_fcn.vm_provision(home)
+    //ext_fcn.vm_provision(home)
 
     // Prepare the VMs to run OpenStack
-    ext_fcn.vm_preparation_for_osa(home)
+    //ext_fcn.vm_preparation_for_osa(home)
 
 }
 
@@ -42,10 +44,10 @@ echo "Deploying OpenStack using OSA"
 node('onmetal-provisioner') {
 
     // Deploy OpenStack with OSA
-    ext_fcn.deploy_openstack(home)
+    //ext_fcn.deploy_openstack(home)
     
     // Install and configure Tempest on the onMetal host
-    ext_fcn.configure_tempest(onmetal_ip)
+    //ext_fcn.configure_tempest(onmetal_ip)
     
 }
 
@@ -58,7 +60,7 @@ echo "Validating the OpenStack deployment"
 node('onmetal-provisioner') {
 
     // Run the tempest tests
-    ext_fcn.run_tempest_smoke_tests(onmetal_ip)
+    //ext_fcn.run_tempest_smoke_tests(onmetal_ip)
 
 }
 
