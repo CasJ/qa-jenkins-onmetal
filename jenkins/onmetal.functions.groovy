@@ -23,6 +23,54 @@ def wait_for_ping(host_ip) {
 }
 
 
+def onmetal_provision(playbooks_path) {
+
+    // Spin onMetal Server
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook build_onmetal.yaml --tags 'iad'
+    """
+
+    // Verify onMetal server data
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts get_onmetal_facts.yaml --tags 'iad'
+    """
+
+    // Get server IP address
+    String hosts = readFile("${playbooks_path}hosts")
+    def ip = hosts.substring(hosts.indexOf('=')+1)
+
+    // Wait for server to become active
+    wait_for_ping(ip)
+
+    // Prepare OnMetal server, retry up to 5 times for the command to work
+    retry(5) {
+        sh """
+        cd ${playbooks_path}
+        sudo ansible-playbook -i hosts prepare_onmetal.yaml
+        """
+    }
+
+    // Apply CPU fix - will restart server (~5 min)
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts set_onmetal_cpu.yaml
+    """
+
+    // Wait for the server to come back online
+    wait_for_ping(ip)
+
+    // Add the onMetal host to the known_hosts
+    sh """
+    ssh -o StrictHostKeyChecking=no root@${ip} 'echo "server added to known_hosts"'
+    """
+
+    return (ip)
+
+}
+
+
 def vm_provision(playbooks_path) {
 
     // Configure VMs onMetal server
