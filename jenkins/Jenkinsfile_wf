@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def ext_fcn 
+def osa, common
 String home = '/home/ubuntu/qa-jenkins-onmetal/'
 String onmetal_ip
 
@@ -13,8 +13,10 @@ echo 'Provisioning an onMetal server and preparing it to run OSA'
 node('onmetal-provisioner') {
 
     // Load the external functions
-    ext_fcn = fileLoader.fromGit('jenkins/onmetal.functions.groovy', 
-        'https://github.com/CasJ/qa-jenkins-onmetal.git', 'master', null, '')
+    fileLoader.withGit('https://github.com/CasJ/qa-jenkins-onmetal.git', 'master', null, '') {
+        osa = fileLoader.load('jenkins/osa_onmetal.functions.groovy');
+        common = fileLoader.load('jenkins/common.groovy');
+    }
 
     // Download the project repository
     sh """
@@ -23,9 +25,8 @@ node('onmetal-provisioner') {
     cp /home/ubuntu/.raxpub ${home}.raxpub
     """
     
-    ext_fcn.wait_for_ping('10.0.0.11')
     // Provision the onMetal host
-    onmetal_ip = ext_fcn.onmetal_provision(home)
+    onmetal_ip = osa.onmetal_provision(home)
 
     // Provision the VMs in the onMetal host
     //ext_fcn.vm_provision(home)
