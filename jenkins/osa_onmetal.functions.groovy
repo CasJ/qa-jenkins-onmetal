@@ -158,6 +158,40 @@ def run_tempest_smoke_tests(host_ip) {
 }
 
 
+def delete_virtual_resources(playbooks_path) {
+
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts destroy_virtual_machines.yaml
+    """
+    
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts destroy_virtual_networks.yaml
+    """
+    
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts destroy_lab_state_file.yaml
+    """
+
+}
+
+
+def delete_onmetal(playbooks_path, onmetal_ip) {
+
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts destroy_onmetal.yaml --tags 'iad'
+    """
+
+    sh """
+    ssh-keygen -R ${onmetal_ip}
+    """
+
+}
+
+
 // The external code must return it's contents as an object
 return this;
 

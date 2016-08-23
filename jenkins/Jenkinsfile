@@ -41,7 +41,7 @@ node('onmetal-provisioner') {
 stage 'Deployment'
 // *******************************
 
-echo "Deploying OpenStack using OSA"
+echo 'Deploying OpenStack using OSA'
 node('onmetal-provisioner') {
 
     // Deploy OpenStack with OSA
@@ -57,7 +57,7 @@ node('onmetal-provisioner') {
 stage 'Post-Deployment Validation'
 // *******************************
 
-echo "Validating the OpenStack deployment"
+echo 'Validating the OpenStack deployment'
 node('onmetal-provisioner') {
 
     // Run the tempest tests
@@ -65,3 +65,36 @@ node('onmetal-provisioner') {
 
 }
 
+
+// *******************************
+stage 'Upgrade'
+// *******************************
+echo 'To be defined...'
+
+
+// *******************************
+stage 'Post-Upgrade Validation'
+// *******************************
+echo 'To be defined...'
+
+
+// *******************************
+stage 'Reporting'
+// *******************************
+echo 'To be defined'
+
+
+// *******************************
+stage 'Clean Up'
+// *******************************
+
+echo 'Deleting the onMetal host and its VMs'
+node('onmetal-provisioner') {
+
+    // Delete VMs
+    osa.delete_virtual_resources(home)
+    
+    // Delete the onMetal host
+    osa.delete_onmetal(home, onmetal_ip)
+
+}
