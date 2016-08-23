@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import static common.groovy.*
 
 // Any command placed at the root of the file get executed during the load operation
 echo "Loading external functions for an onMetal host..."
@@ -7,16 +8,16 @@ echo "Loading external functions for an onMetal host..."
 def onmetal_provision(playbooks_path) {
 
     // Spin onMetal Server
-    sh """
-    cd ${playbooks_path}
-    sudo ansible-playbook build_onmetal.yaml --tags 'iad'
-    """
+    //sh """
+    //cd ${playbooks_path}
+    //sudo ansible-playbook build_onmetal.yaml --tags 'iad'
+    //"""
 
     // Verify onMetal server data
-    sh """
-    cd ${playbooks_path}
-    sudo ansible-playbook -i hosts get_onmetal_facts.yaml --tags 'iad'
-    """
+    //sh """
+    //cd ${playbooks_path}
+    //sudo ansible-playbook -i hosts get_onmetal_facts.yaml --tags 'iad'
+    //"""
 
     // Get server IP address
     String hosts = readFile("${playbooks_path}hosts")

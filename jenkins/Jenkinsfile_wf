@@ -29,10 +29,10 @@ node('onmetal-provisioner') {
     onmetal_ip = osa.onmetal_provision(home)
 
     // Provision the VMs in the onMetal host
-    //ext_fcn.vm_provision(home)
+    //osa.vm_provision(home)
 
     // Prepare the VMs to run OpenStack
-    //ext_fcn.vm_preparation_for_osa(home)
+    //osa.vm_preparation_for_osa(home)
 
 }
 
