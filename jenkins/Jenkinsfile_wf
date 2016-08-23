@@ -14,8 +14,8 @@ node('onmetal-provisioner') {
 
     // Load the external functions
     fileLoader.withGit('https://github.com/CasJ/qa-jenkins-onmetal.git', 'master', null, '') {
-        osa = fileLoader.load('jenkins/osa_onmetal.functions.groovy');
         common = fileLoader.load('jenkins/common.groovy');
+        osa = fileLoader.load('jenkins/osa_onmetal.functions.groovy');
     }
 
     // Download the project repository
