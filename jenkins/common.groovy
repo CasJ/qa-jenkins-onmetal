@@ -21,3 +21,7 @@ def wait_for_ping(host_ip) {
 
 }
 
+
+// The external code must return it's contents as an object
+return this;
+
