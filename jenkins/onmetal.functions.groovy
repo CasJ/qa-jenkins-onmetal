@@ -22,6 +22,24 @@ def wait_for_ping(host_ip) {
     
 }
 
+
+def vm_provision(playbooks_path) {
+
+    // Configure VMs onMetal server
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts configure_onmetal.yaml
+    """
+
+    // Create VMs where OSA will be deployed
+    sh """
+    cd ${playbooks_path}
+    sudo ansible-playbook -i hosts create_lab.yaml
+    """
+
+}
+
+
 // The external code must return it's contents as an object
 return this;
 
