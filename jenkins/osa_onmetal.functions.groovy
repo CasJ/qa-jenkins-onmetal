@@ -23,7 +23,7 @@ def onmetal_provision(playbooks_path) {
     String ip = hosts.substring(hosts.indexOf('=')+1)
 
     // Wait for server to become active
-    wait_for_ping(ip)
+   // wait_for_ping(ip)
 
     // Prepare OnMetal server, retry up to 5 times for the command to work
     retry(5) {
@@ -40,7 +40,7 @@ def onmetal_provision(playbooks_path) {
     """
 
     // Wait for the server to come back online
-    wait_for_ping(ip)
+    //wait_for_ping(ip)
 
     return (ip)
 
