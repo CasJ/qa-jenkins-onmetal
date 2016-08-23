@@ -25,7 +25,7 @@ node('onmetal-provisioner') {
     
     ext_fcn.wait_for_ping('10.0.0.11')
     // Provision the onMetal host
-    //onmetal_ip = ext_fcn.onmetal_provision(home)
+    onmetal_ip = ext_fcn.onmetal_provision(home)
 
     // Provision the VMs in the onMetal host
     //ext_fcn.vm_provision(home)

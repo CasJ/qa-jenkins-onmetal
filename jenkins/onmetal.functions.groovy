@@ -39,7 +39,7 @@ def onmetal_provision(playbooks_path) {
 
     // Get server IP address
     String hosts = readFile("${playbooks_path}hosts")
-    def ip = hosts.substring(hosts.indexOf('=')+1)
+    String ip = hosts.substring(hosts.indexOf('=')+1)
 
     // Wait for server to become active
     wait_for_ping(ip)
